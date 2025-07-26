@@ -161,136 +161,113 @@ REFERENCES issued_status(issued_id);
 
 
 ✅ Project Tasks
-🔹 Task 1: Insert a New Book Entry
-sql
-Copy
-Edit
+-- SELECT QUERIES
+SELECT * FROM books;
+SELECT * FROM branch;
+SELECT * FROM employees;
+SELECT * FROM issued_status;
+SELECT * FROM return_status;
+SELECT * FROM members;
+
+-- TASK 1: Insert a New Book Entry
 INSERT INTO books(isbn, book_title, category, rental_price, status, author, publisher)
-VALUES (
-  '978-1-60129-456-2',
-  'To Kill a Mockingbird',
-  'Classic',
-  6.00,
-  'yes',
-  'Harper Lee',
-  'J.B. Lippincott & Co.'
-);
+VALUES('978-1-60129-456-2', 'To Kill a Mockingbird', 'Classic', 6.00, 'yes', 'Harper Lee', 'J.B. Lippincott & Co.');
 SELECT * FROM books;
 
-🔹 Task 2: Update an Existing Member's Address
-sql
-Copy
-Edit
+-- TASK 2: Update an Existing Member's Address
 UPDATE members
 SET member_address = '123 Main St'
 WHERE member_id = 'C101';
 SELECT * FROM members;
 
-🔹 Task 3: Remove a Record from the Issued Status Table
-sql
-Copy
-Edit
+-- TASK 3: Remove a Record from the Issued Status Table
+SELECT * FROM issued_status;
 DELETE FROM issued_status
 WHERE issued_id = 'IS121';
 
-🔹 Task 4: Retrieve Books Issued by a Specific Employee
-sql
-Copy
-Edit
+-- TASK 4: Retrieve Books Issued by a Specific Employee
 SELECT * FROM issued_status
 WHERE issued_emp_id = 'E101';
 
-🔹 Task 5: List Members Who Have Issued More Than One Book
-sql
-Copy
-Edit
+-- TASK 5: List Members Who Have Issued More Than One Book
 SELECT
-  issued_emp_id,
-  COUNT(*)
+    issued_emp_id,
+    COUNT(*)
 FROM issued_status
 GROUP BY 1
 HAVING COUNT(*) > 1;
 
-🔹 Task 6: Create a Summary Table of Book Issue Counts (CTAS)
-sql
-Copy
-Edit
+-- TASK 6: Create Summary Tables Using CTAS (Books & Issue Count)
 CREATE TABLE book_cnts AS
 SELECT 
-  b.isbn,
-  b.book_title,
-  COUNT(ist.issued_id) AS issue_count
-FROM issued_status AS ist
-JOIN books AS b ON ist.issued_book_isbn = b.isbn
+    b.isbn,
+    b.book_title,
+    COUNT(ist.issued_id) AS issue_count
+FROM issued_status as ist
+JOIN books as b
+ON ist.issued_book_isbn = b.isbn
 GROUP BY b.isbn, b.book_title;
 
-🔹 Task 7: Retrieve All Books in the "Classic" Category
-sql
-Copy
-Edit
+-- TASK 7: Retrieve All Books in a Specific Category
 SELECT * FROM books
 WHERE category = 'Classic';
 
-🔹 Task 8: Find Total Rental Income by Category
-sql
-Copy
-Edit
+-- TASK 8: Find Total Rental Income by Category
 SELECT 
-  b.category,
-  SUM(b.rental_price),
-  COUNT(*)
-FROM issued_status AS ist
-JOIN books AS b ON b.isbn = ist.issued_book_isbn
+    b.category,
+    SUM(b.rental_price),
+    COUNT(*)
+FROM 
+    issued_status as ist
+JOIN
+    books as b
+ON b.isbn = ist.issued_book_isbn
 GROUP BY 1;
 
-🔹 Task 9: List Members Who Registered in the Last 180 Days
-sql
-Copy
-Edit
+-- TASK 9: List Members Who Registered in the Last 180 Days
 SELECT * FROM members
 WHERE reg_date >= CURRENT_DATE - INTERVAL '180 days';
-Sample Inserts for Testing:
 
-sql
-Copy
-Edit
-INSERT INTO members(member_id, member_name, member_address, reg_date)
+INSERT INTO members(member_id, member_name, member_address, reg_date )
 VALUES
 ('C120', 'Henry Anderson', '456 Birch St', '2021-12-10'),
 ('C122', 'Liam Walker', '789 Spruce St', '2024-07-26');
 
-🔹 Task 10: List Employees with Their Branch Manager’s Name and Branch Details
-sql
-Copy
-Edit
+-- TASK 10: List Employees with Their Branch Manager's Name and Branch Details
 SELECT 
-  e1.emp_id,
-  e1.emp_name,
-  e1.position,
-  e1.salary,
-  b.*,
-  e2.emp_name AS manager
-FROM employees AS e1
-JOIN branch AS b ON e1.branch_id = b.branch_id    
-JOIN employees AS e2 ON e2.emp_id = b.manager_id;
+    e1.emp_id,
+    e1.emp_name,
+    e1.position,
+    e1.salary,
+    b.*,
+    e2.emp_name as manager
+FROM employees as e1
+JOIN 
+    branch as b
+ON e1.branch_id = b.branch_id    
+JOIN
+    employees as e2
+ON e2.emp_id = b.manager_id;
 
-🔹 Task 11: Create a Table for Books with Rental Price > 7.00
-sql
-Copy
-Edit
-CREATE TABLE books_price_greater_than_seven AS
+-- TASK 11: Create a Table of Books with Rental Price Above a Certain Threshold
+CREATE TABLE books_price_greater_than_seven
+AS
 SELECT * FROM books
 WHERE rental_price > 7.00;
 
 SELECT * FROM books_price_greater_than_seven;
 
-🔹 Task 12: Retrieve the List of Books Not Yet Returned
-sql
-Copy
-Edit
-SELECT * FROM issued_status AS ist
-LEFT JOIN return_status AS rs ON rs.issued_id = ist.issued_id
+-- TASK 12: Retrieve the List of Books Not Yet Returned
+SELECT * FROM issued_status as ist
+LEFT JOIN
+    return_status as rs
+ON rs.issued_id = ist.issued_id
 WHERE rs.return_id IS NULL;
+
+
+
+
+
 ✅ Project Completed
 
 ## 🛠 Technologies Used
